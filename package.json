@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index",
+    "start": "lite-server",
     "dev": "nodemon src/index"
   },
   "repository": {
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Monoametsi/typescript-tut/issues"
   },
-  "homepage": "https://github.com/Monoametsi/typescript-tut#readme"
+  "homepage": "https://github.com/Monoametsi/typescript-tut#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
 }
