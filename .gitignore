@@ -1,5 +1,5 @@
 #non typescript files
-/src/*.js
+src/*.js
 
 # Logs
 logs
