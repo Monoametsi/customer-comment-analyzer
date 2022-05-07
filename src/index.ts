@@ -1,8 +1,7 @@
 import * as fs from 'fs';
-
-const calculator = (num1:number, num2:number): number => {
-    return num1 * num2;
-}
+import * as path from 'path';
+import * as uuid from 'uuid'
+import {comment} from './comments';
 
 let lessThan15CharTotal: number = 0;
 let moverMentionsTotal: number = 0;
@@ -19,7 +18,7 @@ const readFile = (filePath: string): string[][] => {
         const shakerMentionsCount: number = comment.search(/shaker/i);
         const questionsCount: number = comment.search('\\?');
         const urlCount: number = comment.search(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
-        
+
         if(amountOfCommentChar < 15){
             lessThan15CharTotal++;
         }
@@ -48,9 +47,40 @@ const readFile = (filePath: string): string[][] => {
     return x;
 }
 
-readFile('./docs/comments-2018-01-03.txt');
-console.log(`Comments with less then 15 characters: ${lessThan15CharTotal}
-\nComments that mention Mover: ${moverMentionsTotal}\n
-Comments that mention Shaker: ${shakerMentionsTotal}\n
-Comments that have questions: ${questions}\n
-Comments that are spam: ${spam}`);
+const multipleFileReader = (): comment[] => {
+    const fileDir = path.join(__dirname, '../', 'docs', './');
+    const commentfiles:string[] = fs.readdirSync(path.join(__dirname, '../', 'docs', './'));
+    const allComments: comment[] = [];
+
+    commentfiles.map((fileName: string) => {
+        readFile(`${fileDir}${fileName}`);
+
+        const commentObj: comment = {
+            id: uuid.v4(),
+            fileName: fileName,
+            lessThan15: lessThan15CharTotal,
+            amountOfMoverMentions: moverMentionsTotal,
+            amountOfShakerMentions: shakerMentionsTotal,
+            amountOfQuestions: questions,
+            amountOfSpams: spam
+        }
+
+        allComments.push(commentObj);
+        lessThan15CharTotal = 0;
+        moverMentionsTotal = 0;
+        shakerMentionsTotal = 0;
+        questions = 0;
+        spam = 0;
+        // console.log(`Comments with less then 15 characters: ${lessThan15CharTotal}
+        // \nComments that mention Mover: ${moverMentionsTotal}\n
+        // Comments that mention Shaker: ${shakerMentionsTotal}\n
+        // Comments that have questions: ${questions}\n
+        // Comments that are spam: ${spam}`);    
+    })
+
+    console.log(allComments);
+
+    return allComments;
+}
+
+multipleFileReader();
