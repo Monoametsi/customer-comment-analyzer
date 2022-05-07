@@ -57,7 +57,7 @@ const multipleFileReader = (): comment[] => {
 
         const commentObj: comment = {
             id: uuid.v4(),
-            fileName: fileName,
+            fileName,
             lessThan15: lessThan15CharTotal,
             amountOfMoverMentions: moverMentionsTotal,
             amountOfShakerMentions: shakerMentionsTotal,
