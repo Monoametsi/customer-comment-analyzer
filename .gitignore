@@ -1,6 +1,3 @@
-#non typescript files
-src/*.js
-
 # Logs
 logs
 *.log

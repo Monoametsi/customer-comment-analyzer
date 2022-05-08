@@ -9,7 +9,7 @@ let shakerMentionsTotal: number = 0;
 let questions: number = 0;
 let spam: number = 0;
 
-const readFile = (filePath: string): void => {
+const readFile:Function = (filePath: string): void => {
     const fileDataToArrConveter: string[] = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
 
     fileDataToArrConveter.map((comment: string) => {
@@ -42,7 +42,7 @@ const readFile = (filePath: string): void => {
     });
 }
 
-const multipleFileReader = (): ReportResult[] => {
+const multipleFileReader:Function = (): ReportResult[] => {
     const fileDir = path.join(__dirname, '../', 'docs', './');
     const commentfiles:string[] = fs.readdirSync(fileDir);
     const allReportResults: ReportResult[] = [];
