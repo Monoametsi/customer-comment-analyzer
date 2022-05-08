@@ -1,4 +1,4 @@
-export interface comment {
+export interface ReportResult {
     id: string,
     fileName: string,
     lessThan15: number,
