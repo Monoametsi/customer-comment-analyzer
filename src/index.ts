@@ -59,14 +59,10 @@ const multipleFileReader = (): ReportResult[] => {
             amountOfQuestions: questions,
             amountOfSpams: spam
         }
-        
-        allReportResults.push(reportResult);
 
-        lessThan15CharTotal = 0;
-        moverMentionsTotal = 0;
-        shakerMentionsTotal = 0;
-        questions = 0;
-        spam = 0;
+        allReportResults.push(reportResult);
+        
+        lessThan15CharTotal = moverMentionsTotal = shakerMentionsTotal = questions = spam = 0;
     })
 
     console.log(allReportResults);
