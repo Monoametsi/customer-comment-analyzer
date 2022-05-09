@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as uuid from 'uuid'
 import {ReportResult} from './comments';
@@ -10,50 +10,53 @@ class ReadFile {
     questions: number;
     spam: number;
     
-    constructor(a:number,b:number,c:number,d:number,e:number){
-        this.lessThan15CharTotal = a;
-        this.moverMentionsTotal= b;
-        this.shakerMentionsTotal = c;
-        this.questions = d;
-        this.spam = e;
+    constructor(zero:number){
+        this.lessThan15CharTotal = this.moverMentionsTotal = this.shakerMentionsTotal = this.questions = this.spam = zero;
     }
 
     fileDataToArrConveter: string[] = [];
 
-    commentDataRetriever(fileName: string){
-        this.fileDataToArrConveter = fs.readFileSync(fileName, 'utf8').split(/\r?\n/);
+    async commentDataRetriever(fileName: string){
+        try{
+            const fileData = await fs.readFile(fileName, 'utf8');
+            this.fileDataToArrConveter = fileData.split(/\r?\n/);
 
-        this.fileDataToArrConveter.map((comment: string) => {
-            const amountOfCommentChar: number = comment.length;
-            const moverMentionsCount: number = comment.search(/mover/i);
-            const shakerMentionsCount: number = comment.search(/shaker/i);
-            const questionsCount: number = comment.search('\\?');
-            const urlCount: number = comment.search(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
+            this.fileDataToArrConveter.map((comment: string) => {
+                const amountOfCommentChar: number = comment.length;
+                const moverMentionsCount: number = comment.search(/mover/i);
+                const shakerMentionsCount: number = comment.search(/shaker/i);
+                const questionsCount: number = comment.search('\\?');
+                const urlCount: number = comment.search(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
 
-            if(amountOfCommentChar < 15){
-                this.lessThan15CharTotal++;
-            }
+                if(amountOfCommentChar < 15){
+                    this.lessThan15CharTotal++;
+                }
 
-            if(moverMentionsCount !== -1){
-                this.moverMentionsTotal++;
-            }
+                if(moverMentionsCount !== -1){
+                    this.moverMentionsTotal++;
+                }
 
-            if(shakerMentionsCount !== -1){
-                this.shakerMentionsTotal++;
-            }
+                if(shakerMentionsCount !== -1){
+                    this.shakerMentionsTotal++;
+                }
 
-            if(questionsCount !== -1){
-                this.questions++;
-            }
-            
-            if(urlCount !== -1){
-                this.spam++;
-            }
+                if(questionsCount !== -1){
+                    this.questions++;
+                }
+                
+                if(urlCount !== -1){
+                    this.spam++;
+                }
 
-        });
+            });
+
+        }catch(err){
+            return err;
+        }
+
     }
 
-    x(){
+    counterResults(){
         return { 
             lessThan15CharTotal: this.lessThan15CharTotal,
             moverMentionsTotal: this.moverMentionsTotal,
@@ -69,70 +72,45 @@ class ReadFile {
 }
 
 class MultipleFileReader extends ReadFile {
-    constructor(a:number,b:number,c:number,d:number,e:number){
-        super(a,b,c,d,e);
+    constructor(zero:number){
+        super(zero);
     }
 
-    printReportResults(){
-        const fileDir = path.join(__dirname, '../', 'docs', './');
-        const commentfiles:string[] = fs.readdirSync(fileDir);
-        const allReportResults: ReportResult[] = [];
-    
-        commentfiles.map((fileName: string) => {
-            const File = super.commentDataRetriever(`${fileDir}${fileName}`);
+     async printReportResults(){
+        try{
+            const fileDir = path.join(__dirname, '../', 'docs', './');
+            const commentfiles:string[] = await fs.readdir(fileDir);
+            let allReportResults: ReportResult[] = [];
+            allReportResults = await Promise.all(commentfiles.map(async (fileName: string) => {
+                try{
+                    await super.commentDataRetriever(`${fileDir}${fileName}`);
+                    
+                    const reportResult: ReportResult = {
+                        id: uuid.v4(),
+                        fileName,
+                        lessThan15: super.counterResults().lessThan15CharTotal,
+                        amountOfMoverMentions: super.counterResults().moverMentionsTotal,
+                        amountOfShakerMentions: super.counterResults().shakerMentionsTotal,
+                        amountOfQuestions: super.counterResults().questions,
+                        amountOfSpams: super.counterResults().spam
+                    }
+                    
+                    super.resetCounter();
+                    return reportResult;
+                }catch(err){
+                    throw err;
+                }
+            }))
             
-            const reportResult: ReportResult = {
-                id: uuid.v4(),
-                fileName,
-                lessThan15: super.x().lessThan15CharTotal,
-                amountOfMoverMentions: super.x().moverMentionsTotal,
-                amountOfShakerMentions: super.x().shakerMentionsTotal,
-                amountOfQuestions: super.x().questions,
-                amountOfSpams: super.x().spam
-            }
-    
-            allReportResults.push(reportResult);
-            
-            super.resetCounter();
-        })
-    
-        console.log(allReportResults)
-    
-        return allReportResults;
+            console.log(allReportResults)
+            return allReportResults;
+
+        }catch(err){
+            return err;
+        }
     }
 }
 
-const multipleFileReader = new MultipleFileReader(0,0,0,0,0);
+const multipleFileReader = new MultipleFileReader(0);
 
-console.log(multipleFileReader.printReportResults());
-
-// const multipleFileReader:Function = (): ReportResult[] => {
-//     const fileDir = path.join(__dirname, '../', 'docs', './');
-//     const commentfiles:string[] = fs.readdirSync(fileDir);
-//     const allReportResults: ReportResult[] = [];
-
-//     commentfiles.map((fileName: string) => {
-//         const File = new ReadFile(`${fileDir}${fileName}`);
-//         File.commentDataRetriever();
-
-//         const reportResult: ReportResult = {
-//             id: uuid.v4(),
-//             fileName,
-//             lessThan15: File.lessThan15CharTotal,
-//             amountOfMoverMentions: File.moverMentionsTotal,
-//             amountOfShakerMentions: File.shakerMentionsTotal,
-//             amountOfQuestions: File.questions,
-//             amountOfSpams: File.spam
-//         }
-
-//         allReportResults.push(reportResult);
-        
-//         File.resetCounter();
-//     })
-
-//     console.log(allReportResults);
-
-//     return allReportResults;
-// }
-
-// multipleFileReader();
+multipleFileReader.printReportResults();

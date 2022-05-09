@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    // "noEmitOnError": true,
     "skipLibCheck": true
   },
   "exclude":[
