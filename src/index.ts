@@ -3,11 +3,7 @@ import * as path from 'path';
 import * as uuid from 'uuid'
 import {ReportResult} from './comments';
 
-let lessThan15CharTotal: number = 0;
-let moverMentionsTotal: number = 0;
-let shakerMentionsTotal: number = 0;
-let questions: number = 0;
-let spam: number = 0;
+let lessThan15CharTotal: number = 0, moverMentionsTotal: number = 0, shakerMentionsTotal: number = 0, questions: number = 0, spam: number = 0;
 
 const readFile:Function = (filePath: string): void => {
     const fileDataToArrConveter: string[] = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
