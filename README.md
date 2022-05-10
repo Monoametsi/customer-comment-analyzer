@@ -2,7 +2,7 @@
 
 <h3>Introduction</h3>
 
-<p>Customer-comment-analyzer is an application that helps business to analyze the comments they recieve from customers on their websites. The application runs through all the comments and creates a report with totals that can be used for business intelligence and marketing. This repository holds the backend of the app.</p>
+<p>Customer-comment-analyzer is an application that helps business to analyze the comments they recieve from customers on their websites. The application runs through all the comments and creates a report with totals that can be used for business intelligence and marketing. This repository holds the backend of the app. You can find the apps frontend on this github url <a href="https://github.com/Monoametsi/ikhoka-dashboard">https://github.com/Monoametsi/ikhoka-dashboard</a></p>
 
 <p>The app currently analyses comments on the basis of three metrics:</p>
 
