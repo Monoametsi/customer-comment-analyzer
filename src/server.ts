@@ -1,7 +1,15 @@
 import express, {Request,Response,Application} from 'express';
+import cors from 'cors';
 import { MultipleFileReader } from './index';
 
 const app:Application = express();
+
+const corsOptions = {
+    origin: 'http://localhost:4305',
+    credentials: true
+}
+
+app.use(cors(corsOptions));
 
 const PORT:number = Number(process.env.PORT) || 4000;
 
