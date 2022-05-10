@@ -21,5 +21,5 @@
     <li>2. Run npm install to install app dependencies.</li>
     <li>3. <code>npm run build</code> </li>
     <li>4. <code>npm run start</code> </li>
-    <li>5. Navigate to <a href="http://localhost:4500">http://localhost:4500</a> in your browser.</li>
+    <li>5. Navigate to <a href="http://localhost:4000">http://localhost:4000</a> in your browser.</li>
 </ul>
