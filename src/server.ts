@@ -11,7 +11,7 @@ interface Cors {
     origin: string
 }
 
-dotenv.config({path: path.join(__dirname, '.env')})
+dotenv.config({path: path.join(__dirname, '../', '.env')})
 
 const corsOptions: Cors = {
     origin: 'http://localhost:4200'
@@ -29,10 +29,7 @@ app.get('/report-results', async (req:Request, res:Response) => {
         const multipleFileReader: MultipleFileReader  = new MultipleFileReader(0);
         const reportResults = await multipleFileReader.printReportResults();
 
-        return res.status(200).json({
-            message: "Report results successfully delivered",
-            reportResults
-        });
+        return res.status(200).json(reportResults);
     }catch(err: unknown){
         res.status(503).json({
             message: "Internal server error",
