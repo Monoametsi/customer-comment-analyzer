@@ -2,4 +2,4 @@
 
 <h3>Introduction</h3>
 
-<p>asdadasdasddsfsdf</p>
+<p>Customer-comment-analyzer is an application that helps business to analyze the comments they recieve from customers on the websites.</p>
