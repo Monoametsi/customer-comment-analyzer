@@ -71,7 +71,7 @@ class ReadFile {
     }
 }
 
-class MultipleFileReader extends ReadFile {
+export class MultipleFileReader extends ReadFile {
     constructor(zero:number){
         super(zero);
     }
@@ -110,7 +110,3 @@ class MultipleFileReader extends ReadFile {
         }
     }
 }
-
-const multipleFileReader = new MultipleFileReader(0);
-
-multipleFileReader.printReportResults();
