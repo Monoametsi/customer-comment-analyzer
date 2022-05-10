@@ -13,3 +13,13 @@
     <li>Total number of comments that contain one on more question marks</li>
     <li>Total number of comments that contain a url to a web page</li>
 </ul>
+
+<h1>Running the Application Locally:</h1>
+
+<ul>
+    <li>1. Install Node.js(http://nodejs.org).</li>
+    <li>2. Run npm install to install app dependencies.</li>
+    <li>3. <code>npm run build</code> </li>
+    <li>4. <code>npm run start</code> </li>
+    <li>5. Navigate to <a href="http://localhost:4500">http://localhost:4500</a> in your browser.</li>
+</ul>
