@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as uuid from 'uuid'
 import {ReportResult} from './comments';
 
-class ReadFile {
+abstract class ReadFile {
     lessThan15CharTotal: number;
     moverMentionsTotal: number;
     shakerMentionsTotal: number;
@@ -12,6 +12,10 @@ class ReadFile {
     
     constructor(zero:number){
         this.lessThan15CharTotal = this.moverMentionsTotal = this.shakerMentionsTotal = this.questions = this.spam = zero;
+    }
+
+    counterIncrementer(){
+        return
     }
 
     fileDataToArrConveter: string[] = [];
@@ -57,12 +61,13 @@ class ReadFile {
     }
 
     counterResults(){
+        
         return { 
-            lessThan15CharTotal: this.lessThan15CharTotal,
-            moverMentionsTotal: this.moverMentionsTotal,
-            shakerMentionsTotal: this.shakerMentionsTotal,
-            questions: this.questions,
-            spam: this.spam
+            lessThan15: this.lessThan15CharTotal,
+            amountOfMoverMentions: this.moverMentionsTotal,
+            amountOfShakerMentions: this.shakerMentionsTotal,
+            amountOfQuestions: this.questions,
+            amountOfSpams: this.spam
         }
     }
 
@@ -70,6 +75,26 @@ class ReadFile {
         return this.lessThan15CharTotal = this.moverMentionsTotal = this.shakerMentionsTotal = this.questions = this.spam = 0;
     }
 }
+
+// class lessThan15CharTotal extends ReadFile{
+//   this.lessThan15CharTotal++;
+// }
+
+// class moverMentionsTotal extends ReadFile{
+//  this.moverMentionsTotal++;
+// }
+
+// class shakerMentionsTotal extends ReadFile{
+// this.shakerMentionsTotal++;
+// }
+
+// class questions extends ReadFile{
+// this.questions++;
+// }
+
+// class spam extends ReadFile{
+// this.spam++;
+// }
 
 export class MultipleFileReader extends ReadFile {
     constructor(zero:number){
@@ -85,14 +110,10 @@ export class MultipleFileReader extends ReadFile {
                 try{
                     await super.commentDataRetriever(`${fileDir}${fileName}`);
                     
-                    const reportResult: ReportResult = {
-                        id: uuid.v4(),
-                        fileName,
-                        lessThan15: super.counterResults().lessThan15CharTotal,
-                        amountOfMoverMentions: super.counterResults().moverMentionsTotal,
-                        amountOfShakerMentions: super.counterResults().shakerMentionsTotal,
-                        amountOfQuestions: super.counterResults().questions,
-                        amountOfSpams: super.counterResults().spam
+                    const reportResult: ReportResult = { 
+                        id: uuid.v4(), 
+                        fileName, 
+                        ...super.counterResults()
                     }
                     
                     super.resetCounter();
