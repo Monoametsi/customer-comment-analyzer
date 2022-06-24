@@ -3,14 +3,14 @@ import * as path from 'path';
 import * as uuid from 'uuid'
 import {ReportResult} from './comments';
 
-abstract class ReadFile {
-    lessThan15CharTotal: number;
-    moverMentionsTotal: number;
-    shakerMentionsTotal: number;
-    questions: number;
-    spam: number;
+class ReadFile {
+    private lessThan15CharTotal: number;
+    private moverMentionsTotal: number;
+    private shakerMentionsTotal: number;
+    private questions: number;
+    private spam: number;
     
-    constructor(zero:number){
+    constructor(zero: number){
         this.lessThan15CharTotal = this.moverMentionsTotal = this.shakerMentionsTotal = this.questions = this.spam = zero;
     }
 
@@ -60,9 +60,11 @@ abstract class ReadFile {
 
     }
 
-    counterResults(){
+    counterResults(fileName:string):ReportResult{
         
         return { 
+            id: uuid.v4(), 
+            fileName,
             lessThan15: this.lessThan15CharTotal,
             amountOfMoverMentions: this.moverMentionsTotal,
             amountOfShakerMentions: this.shakerMentionsTotal,
@@ -96,27 +98,24 @@ abstract class ReadFile {
 // this.spam++;
 // }
 
-export class MultipleFileReader extends ReadFile {
+export class MultipleFileReader {
+    private fileReader: ReadFile;
+
     constructor(zero:number){
-        super(zero);
+        this.fileReader = new ReadFile(zero);
     }
 
      async printReportResults(){
         try{
-            const fileDir = path.join(__dirname, '../', 'docs', './');
+            const fileDir:string = path.join(__dirname, '../', 'docs', './');
             const commentfiles:string[] = await fs.readdir(fileDir);
             let allReportResults: ReportResult[] = [];
             allReportResults = await Promise.all(commentfiles.map(async (fileName: string) => {
                 try{
-                    await super.commentDataRetriever(`${fileDir}${fileName}`);
+                    await this.fileReader.commentDataRetriever(`${fileDir}${fileName}`);
                     
-                    const reportResult: ReportResult = { 
-                        id: uuid.v4(), 
-                        fileName, 
-                        ...super.counterResults()
-                    }
-                    
-                    super.resetCounter();
+                    const reportResult:ReportResult = this.fileReader.counterResults(fileName);
+                    this.fileReader.resetCounter();
                     return reportResult;
                 }catch(err){
                     throw err;
@@ -131,3 +130,6 @@ export class MultipleFileReader extends ReadFile {
         }
     }
 }
+
+const multipleFileReader: MultipleFileReader  = new MultipleFileReader(0);
+const reportResults = multipleFileReader.printReportResults();

@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node ./dist/server.js",
-    "dev": "nodemon ./src/server.ts",
+    "dev": "nodemon ./src/index.ts",
     "build": "tsc -p ."
   },
   "repository": {
